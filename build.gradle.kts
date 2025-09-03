@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mascill.serial_port"
+    namespace = "com.mascill.serialport"
     compileSdk = 36
 
     defaultConfig {

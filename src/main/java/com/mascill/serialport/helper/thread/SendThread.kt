@@ -1,4 +1,4 @@
-package com.mascill.serial_port.helper.thread
+package com.mascill.serialport.helper.thread
 
 class SendThread(
     private val sendProvider: () -> Unit,

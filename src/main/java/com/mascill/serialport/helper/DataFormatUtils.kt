@@ -1,4 +1,4 @@
-package com.mascill.serial_port.helper
+package com.mascill.serialport.helper
 
 /**
  * DataFormatUtils

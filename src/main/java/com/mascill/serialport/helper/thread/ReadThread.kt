@@ -1,4 +1,4 @@
-package com.mascill.serial_port.helper.thread
+package com.mascill.serialport.helper.thread
 
 class ReadThread(
     private val inputProvider: () -> java.io.InputStream?,
