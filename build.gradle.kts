@@ -71,7 +71,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.chairoel"
                 artifactId = "serial-port-lib"
-                version = "v0.1.0"
+                version = "v0.2.0"
             }
         }
     }
