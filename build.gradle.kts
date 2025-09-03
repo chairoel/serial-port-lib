@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    // Gradle core plugin 'maven-publish' tidak bisa via alias versi; apply langsung di bawah:
+    id("maven-publish")
 }
 
 android {
@@ -34,21 +36,43 @@ android {
             version = "3.22.1"
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+       compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
+    }
+
+    // Artefak untuk publish (JitPack)
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            // withJavadocJar() opsional untuk Android; kalau bermasalah, skip saja
+        }
     }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.espresso.core)
+
+}
+
+// ---- Publish untuk JitPack ----
+// (JitPack akan override koordinat saat konsumsi via tag, tapi bagus untuk konsistensi & lokal)
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.chairoel"
+                artifactId = "serial-port-lib"
+                version = "v0.1.0"
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 # Build outputs
 /build/
 /.cxx/
+/.gradle/
 /.externalNativeBuild/
 /obj/
 /cmake-build-debug/
