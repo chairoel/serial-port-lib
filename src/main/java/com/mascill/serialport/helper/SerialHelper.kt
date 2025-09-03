@@ -1,8 +1,8 @@
-package com.mascill.serial_port.helper
+package com.mascill.serialport.helper
 
-import com.mascill.serial_port.SerialPort
-import com.mascill.serial_port.helper.thread.ReadThread
-import com.mascill.serial_port.helper.thread.SendThread
+import com.mascill.serialport.SerialPort
+import com.mascill.serialport.helper.thread.ReadThread
+import com.mascill.serialport.helper.thread.SendThread
 import java.io.File
 import java.io.IOException
 import java.io.InputStream

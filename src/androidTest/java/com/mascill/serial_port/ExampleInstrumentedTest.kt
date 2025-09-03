@@ -1,4 +1,4 @@
-package com.mascill.serial_port
+package com.mascill.serialport
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.mascill.serial_port.test", appContext.packageName)
+        assertEquals("com.mascill.serialport.test", appContext.packageName)
     }
 }

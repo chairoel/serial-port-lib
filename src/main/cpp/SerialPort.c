@@ -242,7 +242,7 @@ int set_serial_port(int baud, int databits, int parity, int stopbits, int flow, 
  * Signature: (Ljava/lang/String;II)Ljava/io/FileDescriptor;
  */
 
-JNIEXPORT jobject JNICALL Java_com_mascill_serial_1port_SerialPort_open
+JNIEXPORT jobject JNICALL Java_com_mascill_serialport_SerialPort_open
         (JNIEnv *env, jclass clazz, jstring path, jint baudrate, jboolean flags, jint parity) {
 
     speed_t speed;
@@ -311,7 +311,7 @@ JNIEXPORT jobject JNICALL Java_com_mascill_serial_1port_SerialPort_open
  * Method:    close
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_mascill_serial_1port_SerialPort_close
+JNIEXPORT void JNICALL Java_com_mascill_serialport_SerialPort_close
         (JNIEnv *env, jobject thiz) {
     jclass SerialPortClass = (*env)->GetObjectClass(env, thiz);
     jclass FileDescriptorClass = (*env)->FindClass(env, "java/io/FileDescriptor");
@@ -326,7 +326,7 @@ JNIEXPORT void JNICALL Java_com_mascill_serial_1port_SerialPort_close
     close(descriptor);
 }
 
-JNIEXPORT void JNICALL Java_com_mascill_serial_1port_SerialPort_setParity
+JNIEXPORT void JNICALL Java_com_mascill_serialport_SerialPort_setParity
         (JNIEnv *env, jobject thiz, jint parity) {
     // TODO: implement setParity()
 }

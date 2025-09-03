@@ -1,4 +1,4 @@
-package com.mascill.serial_port.constant
+package com.mascill.serialport.constant
 
 import android.content.Context
 import android.widget.ArrayAdapter

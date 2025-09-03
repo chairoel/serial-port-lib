@@ -1,4 +1,4 @@
-package com.mascill.serial_port
+package com.mascill.serialport
 
 import org.junit.Test
 
