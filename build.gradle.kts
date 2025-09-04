@@ -62,6 +62,8 @@ dependencies {
 
 }
 
+version = (findProperty("VERSION_NAME") ?: "0.0.0").toString()
+
 // ---- Publish untuk JitPack ----
 // (JitPack akan override koordinat saat konsumsi via tag, tapi bagus untuk konsistensi & lokal)
 afterEvaluate {
@@ -71,7 +73,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.chairoel"
                 artifactId = "serial-port-lib"
-                version = "v0.2.1"
+                version = project.version.toString()
             }
         }
     }
