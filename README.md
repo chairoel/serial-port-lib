@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 
 ```
 dependencies {
-    implementation("com.github.chairoel:serial-port-lib:v0.2.1")
+    implementation("com.github.chairoel:serial-port-lib:v0.2.2")
 }
 ```
 
