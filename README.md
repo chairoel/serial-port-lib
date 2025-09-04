@@ -30,11 +30,11 @@ dependencyResolutionManagement {
 
 ```
 dependencies {
-    implementation("com.github.chairoel:serial-port-lib:v0.2.2")
+    implementation("com.github.chairoel:serial-port-lib:LATEST_VERSION")
 }
 ```
 
-### 👉 Check the JitPack badge above for the latest version.
+#### 👉 Check the JitPack badge above for the latest version.
 
 <br>
 
