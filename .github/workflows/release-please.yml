@@ -2,7 +2,8 @@ name: release-please
 
 on:
   push:
-    branches: [master] # protected branch (merge via PR akan tetap memicu event ini)
+    branches: [master]
+  workflow_dispatch: {} # bisa dipicu manual kalau perlu
 
 permissions:
   contents: write
@@ -12,18 +13,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - name: Release Please
+        uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-          package-name: serial-port-lib
-          extra-files: |
-            gradle.properties
-          changelog-types: >
-            [
-              {"type":"feat","section":"Features","hidden":false},
-              {"type":"fix","section":"Bug Fixes","hidden":false},
-              {"type":"refactor","section":"Refactors","hidden":false},
-              {"type":"perf","section":"Performance","hidden":false},
-              {"type":"docs","section":"Docs","hidden":false},
-              {"type":"chore","section":"Chores","hidden":false}
-            ]
+          # baca config default di file repo (lihat langkah b)
+          # config-file dan manifest-file pakai default:
+          #   release-please-config.json & .release-please-manifest.json
