@@ -38,35 +38,6 @@ dependencies {
 
 <br>
 
-## 🚀 Usage
-
-Open a serial port
-
-```
-import com.mascill.serialport.helper.SerialHelper
-import com.mascill.serialport.constant.BaudRates
-
-val helper = object : SerialHelper("/dev/ttyS0", BaudRates.B9600) {
-    override fun onDataReceived(buffer: ByteArray?) {
-        buffer?.let {
-            val hex = it.joinToString(" ") { b -> "%02X".format(b) }
-            println("Received: $hex")
-        }
-    }
-}
-
-helper.open()   // open serial port
-helper.sendHex("AA BB CC DD") // send hex command
-```
-
-### Close port
-
-```
-helper.close()
-```
-
-<br>
-
 ## 🛠 Features
 
 - Kotlin-first API
