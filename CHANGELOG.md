@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.5](https://github.com/chairoel/serial-port-lib/compare/v0.2.4...v0.2.5) (2025-09-08)
+
+
+### Bug Fixes
+
+* **jitpack:** use cmdline-tools sdkmanager & fix Gradle task paths ([33ba1e6](https://github.com/chairoel/serial-port-lib/commit/33ba1e60a845f3ae108b22d6da01870ef3b021cf))
+* **jitpack:** use cmdline-tools sdkmanager & fix Gradle task paths ([2236a97](https://github.com/chairoel/serial-port-lib/commit/2236a976609003e5eb9ee4150f01e98079fa74fd))
+
 ## [0.2.4](https://github.com/chairoel/serial-port-lib/compare/v0.2.3...v0.2.4) (2025-09-08)
 
 
