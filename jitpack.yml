@@ -1,9 +1,9 @@
-jdk:
-  - openjdk17
+jdk: openjdk17
 
 before_install:
   # Set SDK path & add sdkmanager to PATH
   - export ANDROID_HOME=/opt/android-sdk-linux
+  - export ANDROID_SDK_ROOT=/opt/android-sdk-linux
   - export SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
 
   # Accept all licenses
