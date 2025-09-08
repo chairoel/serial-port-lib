@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.8](https://github.com/chairoel/serial-port-lib/compare/v0.2.7...v0.2.8) (2025-09-08)
+
+
+### Bug Fixes
+
+* **jitpack:** force sdk.dir to JitPack SDK & ensure cmdline-tools sdk manager flow ([7afa472](https://github.com/chairoel/serial-port-lib/commit/7afa4726ce6a2671b3cce14d9efc64d1283b5718))
+* **jitpack:** force sdk.dir to JitPack SDK & ensure cmdline-tools sdkmanager flow ([58a5000](https://github.com/chairoel/serial-port-lib/commit/58a50001b7012918ed73542b1f503b6cad480601))
+
 ## [0.2.7](https://github.com/chairoel/serial-port-lib/compare/v0.2.6...v0.2.7) (2025-09-08)
 
 
