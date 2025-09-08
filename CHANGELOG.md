@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/chairoel/serial-port-lib/compare/v0.2.5...v0.2.6) (2025-09-08)
+
+
+### Bug Fixes
+
+* **jitpack:** update readme for trigger jitpack ([3f469f3](https://github.com/chairoel/serial-port-lib/commit/3f469f35524c6cda547216016bf95cfe7f8608a9))
+
 ## [0.2.5](https://github.com/chairoel/serial-port-lib/compare/v0.2.4...v0.2.5) (2025-09-08)
 
 
