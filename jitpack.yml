@@ -4,16 +4,14 @@ jdk:
 before_install:
   # Set SDK path & add sdkmanager to PATH
   - export ANDROID_HOME=/opt/android-sdk-linux
-  - export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$PATH
+  - export SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
 
   # Accept all licenses
-  - yes | sdkmanager --licenses
+  - yes | "${SDKMANAGER}" --licenses
 
   # Install the components your build requires
-  - sdkmanager "platforms;android-36" "build-tools;34.0.0" "cmake;3.22.1" "ndk;28.0.12433566"
+  - "${SDKMANAGER}" "platforms;android-36" "build-tools;34.0.0" "cmake;3.22.1" "ndk;28.0.12433566"
 
 install:
   # Build only library modules & publish to mavenLocal JitPack
-  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION \
-    :serial-port:clean :serial-port:assembleRelease \
-    :serial-port:publishReleasePublicationToMavenLocal
+  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION :serial-port:clean :serial-port:assembleRelease :serial-port:publishReleasePublicationToMavenLocal
