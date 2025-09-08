@@ -5,14 +5,16 @@ androidx-core = "1.13.1"
 junit = "4.13.2"
 androidx-junit = "1.1.5"
 espresso = "3.5.1"
+converterGson = "2.4.0"
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android  = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-maven-publish   = { id = "maven-publish" } # plugin core Gradle (tanpa versi)
+android-application = { id = "com.android.application", version.ref = "agp" }
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }

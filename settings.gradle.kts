@@ -1,8 +1,14 @@
 pluginManagement {
   repositories {
-    gradlePluginPortal()
-    google()
+    google {
+      content {
+        includeGroupByRegex("com\\.android.*")
+        includeGroupByRegex("com\\.google.*")
+        includeGroupByRegex("androidx.*")
+      }
+    }
     mavenCentral()
+    gradlePluginPortal()
   }
 }
 dependencyResolutionManagement {
@@ -12,7 +18,7 @@ dependencyResolutionManagement {
     mavenCentral()
   }
 }
-rootProject.name = "serial-port-lib"
 
+rootProject.name = "serial-port-lib"
 include(":serial-port")
 include(":sample-app")
