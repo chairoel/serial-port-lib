@@ -56,12 +56,7 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.espresso.core)
-
 }
 
 version = (findProperty("VERSION_NAME") ?: "0.0.0").toString()
