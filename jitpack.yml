@@ -2,4 +2,6 @@ jdk:
   - openjdk17
 
 install:
-  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION clean :assembleRelease publishReleasePublicationToMavenLocal
+  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION \
+    :serial-port:clean :serial-port:assembleRelease \
+    :serial-port:publishReleasePublicationToMavenLocal

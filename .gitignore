@@ -1,17 +1,19 @@
-# Build outputs
-/build/
-/.cxx/
-/.gradle/
-/.externalNativeBuild/
-/obj/
-/cmake-build-debug/
-/cmake-build-release/
-
-# Object & binary
-*.o
-*.so
-*.a
-
-# Android/Gradle
-/.idea/
 *.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/.name
+/.idea/AndroidProjectSystem.xml
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+

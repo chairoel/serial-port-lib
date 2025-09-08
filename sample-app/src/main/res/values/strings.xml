@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Serial Sample App</string>
+
+    <string name="coma" translatable="false">COM</string>
+    <string name="comb" translatable="false">COMB</string>
+    <string name="clear">Clear</string>
+    <string name="text_rbtn" translatable="false">Txt</string>
+    <string name="hex_rbtn" translatable="false">Hex</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="autoclr">Auto clear</string>
+    <string name="send_time" translatable="false">500</string>
+    <string name="millsecond" translatable="false">ms</string>
+    <string name="auto">Auto</string>
+    <string name="send">Send</string>
+    <string name="com">Serial port</string>
+    <string name="opened">already open</string>
+    <string name="nopermission">Open Com failed:No permission to write or read!</string>
+    <string name="unknownerr">Open Com failed:unknown error.</string>
+    <string name="parametererr">Open Com failed:Parameter error.</string>
+    <string name="port_name" translatable="false">Port Name</string>
+</resources>
