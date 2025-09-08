@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.4](https://github.com/chairoel/serial-port-lib/compare/v0.2.3...v0.2.4) (2025-09-08)
+
+
+### Bug Fixes
+
+* **ci/jitpack:** accept SDK/NDK licenses to fix JitPack build ([758e0d1](https://github.com/chairoel/serial-port-lib/commit/758e0d1987deeaf397af12d03f19450d0466b91a))
+* **ci/jitpack:** accept SDK/NDK licenses to fix JitPack build ([d84b24e](https://github.com/chairoel/serial-port-lib/commit/d84b24e4458ddae5207a412dbb32f2a026c5eafb))
+
 ## [0.2.3](https://github.com/chairoel/serial-port-lib/compare/v0.2.2...v0.2.3) (2025-09-08)
 
 
