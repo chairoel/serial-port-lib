@@ -13,3 +13,6 @@ dependencyResolutionManagement {
   }
 }
 rootProject.name = "serial-port-lib"
+
+include(":serial-port")
+include(":sample-app")
