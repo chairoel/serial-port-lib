@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.3](https://github.com/chairoel/serial-port-lib/compare/v0.2.2...v0.2.3) (2025-09-08)
+
+
+### Bug Fixes
+
+* **build:** move native compile flags to CMake and remove empty cppFlags ([1234cea](https://github.com/chairoel/serial-port-lib/commit/1234cea01b3c966d7ff754efa0af6ef820e3bd94))
+* **build:** move native compile flags to CMake and remove empty cppFlags ([7b8197f](https://github.com/chairoel/serial-port-lib/commit/7b8197f98ea94cb18a906b4551dc9fcf0a7e5372))
+
 ## [0.2.2](https://github.com/chairoel/serial-port-lib/compare/v0.2.1...v0.2.2) (2025-09-04)
 
 
