@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.7](https://github.com/chairoel/serial-port-lib/compare/v0.2.6...v0.2.7) (2025-09-08)
+
+
+### Bug Fixes
+
+* **jitpack:** stop tracking local.properties and enforce repo-wide ignore ([a65f1ff](https://github.com/chairoel/serial-port-lib/commit/a65f1ffbc34f3a278cdc88650a8837f87e3e775a))
+* **jitpack:** stop tracking local.properties and enforce repo-wide ignore ([7157f06](https://github.com/chairoel/serial-port-lib/commit/7157f0663acb0b327849e775021df6b12de41dba))
+
 ## [0.2.6](https://github.com/chairoel/serial-port-lib/compare/v0.2.5...v0.2.6) (2025-09-08)
 
 
