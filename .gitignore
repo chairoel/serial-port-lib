@@ -15,5 +15,7 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 
+# Android local SDK config
+local.properties
+**/local.properties
