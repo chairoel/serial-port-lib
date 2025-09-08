@@ -11,6 +11,14 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("serial_port")
 
+
+# Set standard C language and global compilation options
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# General Warning (optional, can be removed if too loud)
+add_compile_options(-Wall -Wextra)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -37,3 +45,12 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         # List libraries link to the target library
         android
         log)
+
+# Special options for serial_port target
+# Error if there is a function without a correct return type
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
+        -Werror=return-type
+)
+
+# (Optional) Macro definitions, for example for logging
+# target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE SERIALPORT_ENABLE_LOG=1)
