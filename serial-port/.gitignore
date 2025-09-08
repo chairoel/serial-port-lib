@@ -1,0 +1,17 @@
+# Build outputs
+/build/
+/.cxx/
+/.gradle/
+/.externalNativeBuild/
+/obj/
+/cmake-build-debug/
+/cmake-build-release/
+
+# Object & binary
+*.o
+*.so
+*.a
+
+# Android/Gradle
+/.idea/
+*.iml
