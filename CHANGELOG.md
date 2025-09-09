@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.9](https://github.com/chairoel/serial-port-lib/compare/v0.2.8...v0.2.9) (2025-09-09)
+
+
+### Bug Fixes
+
+* **jitpack:** stable Android build with NDK r28 ([034ba33](https://github.com/chairoel/serial-port-lib/commit/034ba339085c01e189341ccc540d58cfc8323e62))
+* **jitpack:** stable Android build with NDK r28 ([7f435f1](https://github.com/chairoel/serial-port-lib/commit/7f435f18bc4124caf1d0c41eb318cc163737c579))
+
 ## [0.2.8](https://github.com/chairoel/serial-port-lib/compare/v0.2.7...v0.2.8) (2025-09-08)
 
 
