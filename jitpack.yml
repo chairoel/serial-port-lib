@@ -1,5 +1,13 @@
 jdk:
   - openjdk17
 
+# (opsional tapi disarankan: pre-accept license agar Gradle boleh auto-download SDK/NDK)
+before_install:
+  - mkdir -p "$ANDROID_HOME/licenses"
+  - printf "24333f8a63b6825ea9c5514f83c2829b004d1fee\n" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - printf "601085b94cd77f0b54ff86406957099ebe79c4d6\n" > "$ANDROID_HOME/licenses/android-ndk-license"
+
 install:
-  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION clean :assembleRelease publishReleasePublicationToMavenLocal
+  - ./gradlew --no-daemon --no-configuration-cache \
+    -Pgroup=com.github.chairoel -Pversion=$VERSION \
+    :serial-port:clean :serial-port:assembleRelease :serial-port:publishToMavenLocal
