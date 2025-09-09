@@ -1,7 +1,14 @@
 jdk:
   - openjdk17
 
+before_install:
+  # Pakai sdkmanager dari cmdline-tools (hindari varian lama yang butuh JAXB)
+  - export SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+  # Terima semua lisensi (jika sudah pernah, ini tetap aman)
+  - yes | "$SDKMANAGER" --licenses || true
+  # Pastikan paket yang dibutuhkan tersedia (idempotent)
+  - "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0" "cmake;3.31.5" "ndk;28.0.12433566" || true
+
 install:
-  - ./gradlew --no-daemon --no-configuration-cache \
-    -Pgroup=com.github.chairoel -Pversion=$VERSION \
-    :serial-port:clean :serial-port:assembleRelease :serial-port:publishToMavenLocal
+  # Satu baris saja, TANPA backslash
+  - ./gradlew --no-daemon --no-configuration-cache -Pgroup=com.github.chairoel -Pversion=$VERSION :serial-port:clean :serial-port:assembleRelease :serial-port:publishToMavenLocal
