@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.16](https://github.com/chairoel/serial-port-lib/compare/v0.2.15...v0.2.16) (2025-09-09)
+
+
+### Bug Fixes
+
+* **serial-port:** move DispatchQueueThread to module, update SerialControl, and integrate in sample MainActivity ([6d0fbdc](https://github.com/chairoel/serial-port-lib/commit/6d0fbdcc9c0fd23038ec9c273f4e232dec1484d8))
+* **serial-port:** move DispatchQueueThread to module, update SerialControl, and integrate in sample MainActivity ([91c83cf](https://github.com/chairoel/serial-port-lib/commit/91c83cf841805dc0784ccc80f5b66e8cbf4fbba7))
+
 ## [0.2.15](https://github.com/chairoel/serial-port-lib/compare/v0.2.14...v0.2.15) (2025-09-09)
 
 
