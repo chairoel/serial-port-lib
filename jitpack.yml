@@ -1,21 +1,15 @@
-jdk: openjdk17
+jdk:
+  - openjdk17
 
 before_install:
-  # Force SDK path to JitPack default location
-  - export ANDROID_HOME=/opt/android-sdk-linux
-  - export ANDROID_SDK_ROOT=/opt/android-sdk-linux
-  # If local.properties exists (from older tags), patch sdk.dir to JitPack SDK
-  - sed -i 's#^sdk.dir=.*#sdk.dir=/opt/android-sdk-linux#' local.properties || true
-
-  # Use sdkmanager from cmdline-tools
-  - export SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
-
-  # Accept all licenses automatically
-  - yes | "${SDKMANAGER}" --licenses
-
-  # Install required components for the build
-  - "${SDKMANAGER}" "platforms;android-36" "build-tools;34.0.0" "cmake;3.22.1" "ndk;28.0.12433566"
+  # Accept the license & install the required packages for the NDK build.
+  - yes | sdkmanager --licenses
+  - sdkmanager "platforms;android-36" "build-tools;34.0.0" "cmake;3.22.1" "ndk;28.0.12433566"
 
 install:
-  # Build only the library module & publish to JitPack's local maven
-  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION :serial-port:clean :serial-port:assembleRelease :serial-port:publishReleasePublicationToMavenLocal
+  # Just build and publish library modules
+  - ./gradlew --no-daemon --no-configuration-cache \
+    -Pgroup=com.github.chairoel -Pversion=$VERSION \
+    :serial-port:clean \
+    :serial-port:assembleRelease \
+    :serial-port:publishReleasePublicationToMavenLocal

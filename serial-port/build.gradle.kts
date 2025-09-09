@@ -9,7 +9,7 @@ android {
     namespace = "com.mascill.serialport"
     compileSdk = 36
 
-    ndkVersion = "28.0.12433566"
+    ndkVersion = providers.gradleProperty("ANDROID_NDK_VERSION").get()
 
     defaultConfig {
         minSdk = 24
