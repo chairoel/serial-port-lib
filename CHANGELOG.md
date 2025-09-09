@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.11](https://github.com/chairoel/serial-port-lib/compare/v0.2.10...v0.2.11) (2025-09-09)
+
+
+### Bug Fixes
+
+* **jitpack:** accept NDK licenses via cmdline-tools and simplify Gradle command ([98a56b1](https://github.com/chairoel/serial-port-lib/commit/98a56b1e81f5c38229527ed77227e5f92e6c09cd))
+* **jitpack:** accept NDK licenses via cmdline-tools and simplify Gradle command ([c07fa8f](https://github.com/chairoel/serial-port-lib/commit/c07fa8f4a1ec0b8e3335c9f0ed3bfbdf949dfe28))
+
 ## [0.2.10](https://github.com/chairoel/serial-port-lib/compare/v0.2.9...v0.2.10) (2025-09-09)
 
 
