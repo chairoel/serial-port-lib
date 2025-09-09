@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.12](https://github.com/chairoel/serial-port-lib/compare/v0.2.11...v0.2.12) (2025-09-09)
+
+
+### Bug Fixes
+
+* **jitpack:** accept Android/NDK licenses & use cmdline-tools sdkmanager ([26079d2](https://github.com/chairoel/serial-port-lib/commit/26079d21dd69336a8f2c69d625da75da0db6c85a))
+* **jitpack:** accept Android/NDK licenses & use cmdline-tools sdkmanager ([ef5a367](https://github.com/chairoel/serial-port-lib/commit/ef5a367d45a99b2ce8a36eb259751b35b6a8c238))
+
 ## [0.2.11](https://github.com/chairoel/serial-port-lib/compare/v0.2.10...v0.2.11) (2025-09-09)
 
 
