@@ -16,8 +16,8 @@ class AssistBean : Serializable {
     }
 
     var isTxt: Boolean = true
-    var sendTxtA: String = "\$000~TEST%\$100~TEST%\$200~TEST%"
-    var sendTxtB: String = "\$000~TEST%\$100~TEST%"
+    var sendTxtA: String = "$000~TEST%$100~TEST%$200~TEST%"
+    var sendTxtB: String = "$000~TEST%$100~TEST%"
     var sendHexA: String = "AA"
     var sendHexB: String = "BB"
     var sTimeA: String = "500"

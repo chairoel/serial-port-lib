@@ -1,5 +1,7 @@
 package com.mascill.serialport.helper.thread
 
+import java.lang.Object
+
 class SendThread(
     private val sendProvider: () -> Unit,
     private val delayProvider: () -> Int
@@ -14,7 +16,7 @@ class SendThread(
             synchronized(this) {
                 if (suspendFlag) {
                     try {
-                        (this as java.lang.Object).wait()
+                        (this as Object).wait()
                     } catch (e: InterruptedException) {
                         e.printStackTrace()
                     }
@@ -39,7 +41,7 @@ class SendThread(
     @Synchronized
     fun resumeThread() {
         suspendFlag = false
-        (this as java.lang.Object).notify()
+        (this as Object).notify()
     }
 
     // 终止线程 (Terminate a thread)
