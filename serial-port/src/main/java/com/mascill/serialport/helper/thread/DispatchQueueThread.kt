@@ -1,7 +1,8 @@
-package com.mascill.serialport.sample
+package com.mascill.serialport.helper.thread
 
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
+import java.lang.Object
 
 /**
  * Thread antrian display yang independen dari Activity.
@@ -10,10 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue
  * @param onData callback untuk setiap paket yang di-pop dari antrian
  * @param perItemSleepMs jeda kecil antar item (default 5ms) agar UI tidak janky
  */
-class DispQueueThread(
+class DispatchQueueThread(
     private val onData: (ByteArray) -> Unit,
     private val perItemSleepMs: Long = 5L
-) : Thread("DispQueue") {
+) : Thread("DispatchQueue") {
 
     private val queueList: BlockingQueue<ByteArray> = LinkedBlockingQueue()
     @Volatile private var running: Boolean = true
