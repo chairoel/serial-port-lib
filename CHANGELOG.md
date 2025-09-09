@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.10](https://github.com/chairoel/serial-port-lib/compare/v0.2.9...v0.2.10) (2025-09-09)
+
+
+### Bug Fixes
+
+* **jitpack:** update to allow Gradle to install NDK/CMake ([4572b8d](https://github.com/chairoel/serial-port-lib/commit/4572b8dcca61de22aa1cc5726a85d5d74f28138e))
+* **jitpack:** update to allow Gradle to install NDK/CMake ([317a871](https://github.com/chairoel/serial-port-lib/commit/317a871fa2203e5a796492b00ced5b7878492c79))
+
 ## [0.2.9](https://github.com/chairoel/serial-port-lib/compare/v0.2.8...v0.2.9) (2025-09-09)
 
 
