@@ -12,29 +12,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import androidx.appcompat.widget.SwitchCompat
+import com.mascill.serialport.access.SerialModuleAccess
+import com.mascill.serialport.access.SerialControl
 import com.mascill.serialport.constant.BaudRates
 import com.mascill.serialport.constant.ParityOptions
 import com.mascill.serialport.helper.AssistBean
 import com.mascill.serialport.helper.SerialHelper
-import com.mascill.serialport.helper.ShellUtils
+import com.mascill.serialport.helper.thread.DispatchQueueThread
 import com.mascill.serialport.sample.databinding.ActivityMainBinding
 import java.io.*
-import java.security.InvalidParameterException
-import java.util.regex.Pattern
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
-    private val PREFS_SPINNER = "spinner_prefs"
-    private val KEY_BAUD_IDX = "baud_idx"
-    private val KEY_PORT_NAME = "port_name"
-    private val KEY_PARITY_IDX = "parity_idx"
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var serialControl: SerialControl
-    private var dispQueue: DispQueueThread? = null
+    // --- Serial helpers
+    private lateinit var serialControl: SerialHelper
+    private val serialAccess by lazy { SerialModuleAccess() }
+    private var dispatchQueue: DispatchQueueThread? = null
 
+    // --- UI
     private lateinit var etDisplayData: EditText
     private lateinit var etInputData: EditText
     private lateinit var etTimeSendData: EditText
@@ -45,49 +44,38 @@ class MainActivity : AppCompatActivity() {
     private var assistData: AssistBean = AssistBean()
     private var isConnected: Boolean = false
 
-    private val sFilename = "ComAssistant"
-    private val sLinename = "AssistData"
+    private val sFileName = "ComAssistant"
+    private val sLineName = "AssistData"
 
-    private var isAdaro: Boolean = false
+    private var isDockModel: Boolean = false
 
     private lateinit var portAdapter: HintAdapter
 
     private val spinnerPrefs: SharedPreferences by lazy {
-        getSharedPreferences(PREFS_SPINNER, Context.MODE_PRIVATE)
+        getSharedPreferences(PREFS_SPINNER, MODE_PRIVATE)
     }
 
-    // Handler untuk memastikan update UI dijalankan di main thread
+    // Ensure UI updates run on main thread
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
     private class HintAdapter(
         context: Context,
         layoutId: Int,
-        private val data: MutableList<String>
+        data: MutableList<String>
     ) : ArrayAdapter<String>(context, layoutId, data) {
-
-        override fun isEnabled(position: Int): Boolean {
-            // posisi 0 = hint -> tidak bisa dipilih
-            return position != 0
-        }
-
+        override fun isEnabled(position: Int): Boolean = position != 0 // 0 = hint
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val v = super.getDropDownView(position, convertView, parent)
-            // opsional: bisa styling hint di sini
-            return v
+            return super.getDropDownView(position, convertView, parent)
         }
     }
 
     private fun setupBaudRateSpinner(spinner: Spinner) {
         val adapter = BaudRates.adapter(this)
         spinner.adapter = adapter
-
-        // restore index (default = BaudRates.defaultIndex)
         val savedIdx = spinnerPrefs
             .getInt(KEY_BAUD_IDX, BaudRates.defaultIndex)
             .coerceIn(0, adapter.count - 1)
-
         spinner.setSelection(savedIdx)
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinnerPrefs.edit().putInt(KEY_BAUD_IDX, position).apply()
@@ -97,33 +85,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupPortSpinner(spinner: Spinner) {
-        // awal: cuma ada hint
         val items = mutableListOf("Pilih port…")
-        portAdapter = HintAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            items
-        ).also {
+        portAdapter = HintAdapter(this, android.R.layout.simple_spinner_item, items).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         spinner.adapter = portAdapter
         spinner.setSelection(0)
         spinner.isEnabled = false
 
-        // load daftar port di background (biar UI nggak freeze)
         Thread {
-            val ports: List<String> = getListPort()
+            val ports: List<String?> = serialAccess.getListPort()
             val finalList = buildList {
                 add("Pilih port…")
-                addAll(ports.filter { it.isNotBlank() }.distinct())
+                addAll(ports.filterNotNull().filter { it.isNotBlank() }.distinct())
             }
-
             runOnUiThread {
                 portAdapter.clear()
                 portAdapter.addAll(finalList)
                 spinner.isEnabled = finalList.size > 1
 
-                // restore pilihan sebelumnya kalau ada
                 val savedPort = spinnerPrefs.getString(KEY_PORT_NAME, null)
                 val idx = if (savedPort != null) portAdapter.getPosition(savedPort) else 0
                 spinner.setSelection(if (idx >= 0) idx else 0)
@@ -154,14 +134,9 @@ class MainActivity : AppCompatActivity() {
         swMode = binding.swMode
 
         swMode.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(this@MainActivity, "Fitur diaktifkan", Toast.LENGTH_SHORT).show()
-                isAdaro = true
-                Log.d("TAG", "CheckComA: masuk ${getSerialDeviceNodeByName()}")
-            } else {
-                Toast.makeText(this@MainActivity, "Fitur dinonaktifkan", Toast.LENGTH_SHORT).show()
-                isAdaro = false
-            }
+            isDockModel = isChecked
+            showMessage(if (isChecked) "Fitur diaktifkan" else "Fitur dinonaktifkan")
+            if (isChecked) Log.d(TAG, "CheckComA: masuk ${serialAccess.getSerialDeviceTtyUSB()}")
         }
 
         binding.btnClear.setOnClickListener {
@@ -169,9 +144,16 @@ class MainActivity : AppCompatActivity() {
             etInputData.setText("")
         }
 
-        findViewById<Button>(R.id.btnSendData).setOnClickListener {
-            val textChars: CharArray = etInputData.text.toString().toCharArray()
-            sendPortData(serialControl, textChars)
+        binding.btnSendData.setOnClickListener {
+            if (!::serialControl.isInitialized || !serialControl.isOpen) {
+                showMessage("Port belum terhubung")
+                return@setOnClickListener
+            }
+            val data = etInputData.text.toString()
+            serialAccess.sendDataSerial(serialControl, data) { ok, msg ->
+                if (!ok) Log.e("SerialSend", msg)
+                showMessage(if (ok) "Kirim berhasil" else msg)
+            }
         }
 
         val spinnerBaudRateCOMA: Spinner = binding.SpinnerBaudRateCOMA
@@ -180,15 +162,59 @@ class MainActivity : AppCompatActivity() {
         val spinnerPortList: Spinner = binding.spinnerPortList
         setupPortSpinner(spinnerPortList)
 
-        val toggleButtonCOMA: ToggleButton = findViewById(R.id.toggleButtonCOMA)
+        val toggleButtonCOMA: ToggleButton = binding.toggleButtonCOMA
         toggleButtonCOMA.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                checkComA(spinnerPortList, spinnerBaudRateCOMA, toggleButtonCOMA)
-                isConnected = true
+                connectUsingAccess(spinnerPortList, spinnerBaudRateCOMA, toggleButtonCOMA)
             } else {
                 isConnected = false
                 closeComPort(serialControl)
             }
+        }
+    }
+
+    private fun ensureDispatchQueue() {
+        if (dispatchQueue != null) return
+        isRun = true
+        dispatchQueue = DispatchQueueThread(onData = { comData ->
+            mainHandler.post { displayRecData(comData) }
+        }).also { it.start() }
+    }
+
+    private fun connectUsingAccess(spinnerPort: Spinner, spinnerBaudRate: Spinner, toggle: ToggleButton) {
+        val manualInput = etManualPortName.text.toString().trim()
+
+        if (!isDockModel && manualInput.isEmpty() && spinnerPort.selectedItemPosition <= 0) {
+            showMessage("Pilih port terlebih dahulu")
+            toggle.isChecked = false
+            return
+        }
+
+        val selectedName: String = when {
+            isDockModel -> serialAccess.getSerialDeviceTtyUSB()
+            manualInput.isNotEmpty() -> manualInput
+            else -> spinnerPort.selectedItem.toString()
+        }
+
+        // Pakai SerialControl bawaan yang sudah override onDataReceived -> DispatchQueueThread
+        ensureDispatchQueue()
+        serialControl = SerialControl(selectedName, dispatchQueue!!)
+
+        // Set parity & parameter lain sebelum connect
+        val parity = ParityOptions.valueAt(ParityOptions.defaultIndex)
+        serialControl.setParity(parity)
+
+        val baudVal = BaudRates.valueAt(spinnerBaudRate.selectedItemPosition)
+
+        // Note: SerialModuleAccess.connect akan setPort("/dev/$selectedName") lagi (idempoten)
+        serialAccess.connect(serialControl, selectedName, baudVal) { ok, msg ->
+            if (!ok) {
+                toggle.isChecked = false
+                showMessage(msg)
+                return@connect
+            }
+            isConnected = true
+            showMessage("Terhubung ke $selectedName @ $baudVal")
         }
     }
 
@@ -199,58 +225,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (dispQueue != null) return
-
-        isRun = true
-        // gunakan kelas terpisah DispQueueThread, update UI via mainHandler
-        dispQueue = DispQueueThread(
-            onData = { comData -> mainHandler.post { displayRecData(comData) } }
-        )
-        dispQueue?.start()
-
+        ensureDispatchQueue()
         assistData = getAssistData()
         displayAssistData(assistData)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        closeComPort(serialControl)
-    }
-
-    /**
-     * Adtrishan : /dev/ttyUSB0
-     * Magnetic North : /dev/ttyS5
-     */
-    private fun checkComA(spinnerPort: Spinner, spinnerBaudRate: Spinner, toggleButtonCOMA: ToggleButton) {
-        val manualInput = etManualPortName.text.toString()
-
-        if (!isAdaro && manualInput.isEmpty() && spinnerPort.selectedItemPosition <= 0) {
-            showMessage("Pilih port terlebih dahulu")
-            toggleButtonCOMA.isChecked = false
-            return
-        }
-
-        val portName: String = when {
-            isAdaro -> "/dev/${getSerialDeviceNodeByName()}"
-            manualInput.isEmpty() -> "/dev/${spinnerPort.selectedItem.toString()}"
-            else -> "/dev/$manualInput"
-        }
-
-        serialControl = SerialControl(portName).apply {
-            val baudVal = BaudRates.valueAt(spinnerBaudRate.selectedItemPosition)
-            setBaudRate(baudVal)
-
-            val parity = ParityOptions.valueAt(ParityOptions.defaultIndex)
-            setParity(parity)
-        }
-        openComPort(serialControl, toggleButtonCOMA)
-    }
-
-    private inner class SerialControl(sPort: String) : SerialHelper(sPort) {
-        override fun onDataReceived(comRecData: ByteArray) {
-            dispQueue?.addQueue(comRecData)
-            dispQueue?.setResume()
-        }
+        closeComPort(if (::serialControl.isInitialized) serialControl else null)
     }
 
     private fun displayRecData(comRecData: ByteArray) {
@@ -258,8 +240,7 @@ class MainActivity : AppCompatActivity() {
         val size = comRecData.size - 1
         val payload = ByteArray(size)
         System.arraycopy(comRecData, 1, payload, 0, size)
-
-        val sMsg = StringBuilder().apply { append(String(payload)) }
+        val sMsg = String(payload)
 
         if (::serialControl.isInitialized && nComPort == serialControl.portIndex && isConnected) {
             etDisplayData.append(sMsg)
@@ -276,13 +257,13 @@ class MainActivity : AppCompatActivity() {
         data.isTxt = true
         data.sendTxtA = etInputData.text.toString()
 
-        val sp: SharedPreferences = getSharedPreferences(sFilename, Context.MODE_PRIVATE)
+        val sp: SharedPreferences = getSharedPreferences(sFileName, MODE_PRIVATE)
         try {
             val baos = ByteArrayOutputStream()
             ObjectOutputStream(baos).use { oos ->
                 oos.writeObject(data)
                 val sBase64 = String(Base64.encode(baos.toByteArray(), 0))
-                sp.edit().putString(sLinename, sBase64).apply()
+                sp.edit().putString(sLineName, sBase64).apply()
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -290,10 +271,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAssistData(): AssistBean {
-        val sp: SharedPreferences = getSharedPreferences(sFilename, Context.MODE_PRIVATE)
+        val sp: SharedPreferences = getSharedPreferences(sFileName, MODE_PRIVATE)
         var data = AssistBean()
         try {
-            val personBase64: String = sp.getString(sLinename, "") ?: ""
+            val personBase64: String = sp.getString(sLineName, "") ?: ""
             val base64Bytes = Base64.decode(personBase64.toByteArray(), 0)
             ByteArrayInputStream(base64Bytes).use { bais ->
                 ObjectInputStream(bais).use { ois ->
@@ -307,99 +288,36 @@ class MainActivity : AppCompatActivity() {
         return data
     }
 
-    private fun sendPortData(comPort: SerialHelper?, sOut: CharArray) {
-        if (comPort != null && comPort.isOpen) {
-            comPort.sendData(sOut, true)
-        }
-    }
-
     private fun closeComPort(comPort: SerialHelper?) {
         if (comPort != null) {
-            comPort.destroySend()
-            comPort.close()
-        }
-    }
-
-    private fun openComPort(comPort: SerialHelper, toggleButtonCOMA: ToggleButton) {
-        try {
-            comPort.open()
-        } catch (e: SecurityException) {
-            if (comPort.portIndex == 0) toggleButtonCOMA.isChecked = false
-            showMessage(getString(R.string.nopermission))
-        } catch (e: IOException) {
-            if (comPort.portIndex == 0) toggleButtonCOMA.isChecked = false
-            showMessage(getString(R.string.unknownerr))
-        } catch (e: InvalidParameterException) {
-            if (comPort.portIndex == 0) toggleButtonCOMA.isChecked = false
-            showMessage(getString(R.string.parametererr))
+            isConnected = false
+            try {
+                comPort.destroySend()
+                comPort.close()
+            } catch (_: Exception) { }
         }
     }
 
     override fun onDestroy() {
-        if (dispQueue != null) {
+        super.onDestroy()
+        if (dispatchQueue != null) {
             isRun = false
-            dispQueue?.stopRunning()
-            dispQueue = null
+            dispatchQueue?.stopRunning()
+            dispatchQueue = null
         }
         closeComPort(if (::serialControl.isInitialized) serialControl else null)
         android.os.Process.killProcess(android.os.Process.myPid())
-        System.exit(0)
-        super.onDestroy()
+        exitProcess(0)
     }
 
     private fun showMessage(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
-    protected fun getListPort(): List<String> {
-        val rst = ShellUtils.execCommand("ls -l /sys/class/tty/tty*", false)
-        val pattern = Pattern.compile("/sys/class/tty/(\\w+) -> .*?/tty/(\\w+)")
-        val portList = mutableListOf<String>()
-
-        Log.d("TAG", "getListPort: rst: ${Gson().toJson(rst)}")
-
-        if (rst.result == 0) {
-            val info = rst.successMsg
-            Log.d("TAG", "getListPort: info: $info")
-            if (info == null) {
-                return listOf("unknown")
-            }
-            val matcher = pattern.matcher(info)
-            while (matcher.find()) {
-                val data = matcher.group(1)
-                portList.add(data)
-            }
-        }
-        return if (portList.isEmpty()) listOf("unknown") else portList
-    }
-
-    // Versi aktif
-    protected fun getSerialDeviceNodeByName(): String {
-        val USB_DEVICE_PATH =
-            "devices/platform/soc/4e00000.ssusb/4e00000.dwc3/xhci-hcd.2.auto/usb1/1-1/1-1.5/1-1.5:1.0"
-        val LIST_TTY_COMMAND = "ls -la /sys/class/tty/"
-
-        val result = ShellUtils.execCommand(LIST_TTY_COMMAND, false)
-
-        if (result.result != 0 || result.successMsg == null) {
-            Log.e("SerialDevice", "Failed to execute command or empty result: ${result.errorMsg}")
-            return "unknown"
-        }
-
-        val lines = result.successMsg!!.split("\n")
-        val ttyUSBPattern = Pattern.compile("ttyUSB(\\d+)")
-
-        for (line in lines) {
-            if (!line.contains(USB_DEVICE_PATH)) continue
-            val matcher = ttyUSBPattern.matcher(line)
-            if (matcher.find()) {
-                val deviceNode = matcher.group()
-                Log.d("SerialDevice", "Found serial device: $deviceNode")
-                return deviceNode
-            }
-        }
-
-        Log.w("SerialDevice", "No matching serial device found for path: $USB_DEVICE_PATH")
-        return "unknown"
+    companion object {
+        private var TAG = MainActivity::class.java.simpleName
+        private const val PREFS_SPINNER = "spinner_prefs"
+        private const val KEY_BAUD_IDX = "baud_idx"
+        private const val KEY_PORT_NAME = "port_name"
     }
 }
