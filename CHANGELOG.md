@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.15](https://github.com/chairoel/serial-port-lib/compare/v0.2.14...v0.2.15) (2025-09-09)
+
+
+### Bug Fixes
+
+* **jitpact:** update jitpack config ([f8e38f6](https://github.com/chairoel/serial-port-lib/commit/f8e38f6b30a6a65ae216138737982d6939513ccc))
+* **jitpact:** update jitpack config ([42ab579](https://github.com/chairoel/serial-port-lib/commit/42ab5794d09077f3f2cb5f47a9098453e7997351))
+
 ## [0.2.14](https://github.com/chairoel/serial-port-lib/compare/v0.2.13...v0.2.14) (2025-09-09)
 
 
