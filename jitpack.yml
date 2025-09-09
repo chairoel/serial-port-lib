@@ -1,26 +1,5 @@
 jdk:
   - openjdk17
 
-before_install:
-  # 0) Tulis file license (biar Gradle tidak protes sebelum sdkmanager jalan)
-  - mkdir -p "$ANDROID_HOME/licenses"
-  - printf "24333f8a63b6825ea9c5514f83c2829b004d1fee\n" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - printf "601085b94cd77f0b54ff86406957099ebe79c4d6\n" > "$ANDROID_HOME/licenses/android-ndk-license"
-
-  # 1) Pastikan cmdline-tools (sdkmanager modern) tersedia
-  - |
-    if [ ! -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
-      echo "Installing cmdline-tools (latest)..."
-      mkdir -p "$ANDROID_HOME/cmdline-tools"
-      curl -Lo /tmp/cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-      unzip -q /tmp/cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
-      mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-    fi
-
-  # 2) Accept licenses & install paket yang dibutuhkan (idempotent)
-  - yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
-  - "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-36" "build-tools;36.0.0" "cmake;3.31.5" "ndk;28.0.12433566" || true
-
 install:
-  # 3) Build & publish modul lib SAJA (1 baris, tanpa backslash)
-  - ./gradlew --no-daemon --no-configuration-cache -Pgroup=com.github.chairoel -Pversion=$VERSION :serial-port:clean :serial-port:assembleRelease :serial-port:publishToMavenLocal
+  - ./gradlew -Pgroup=com.github.chairoel -Pversion=$VERSION clean :assembleRelease publishReleasePublicationToMavenLocal
