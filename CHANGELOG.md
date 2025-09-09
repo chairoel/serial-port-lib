@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.13](https://github.com/chairoel/serial-port-lib/compare/v0.2.12...v0.2.13) (2025-09-09)
+
+
+### Bug Fixes
+
+* **config:** remove ndk 28 from build gradle and update jitpack config ([683a265](https://github.com/chairoel/serial-port-lib/commit/683a265af7368c968971a251f0a4a72a8a41c3ee))
+* **config:** remove ndk 28 from build gradle and update jitpack config ([f2b5052](https://github.com/chairoel/serial-port-lib/commit/f2b50525a1df867460a528ecc070a8a2bb5f305e))
+
 ## [0.2.12](https://github.com/chairoel/serial-port-lib/compare/v0.2.11...v0.2.12) (2025-09-09)
 
 
