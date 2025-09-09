@@ -18,4 +18,5 @@
     <string name="unknownerr">Open Com failed:unknown error.</string>
     <string name="parametererr">Open Com failed:Parameter error.</string>
     <string name="port_name" translatable="false">Port Name</string>
+    <string name="dock_model">Dock</string>
 </resources>

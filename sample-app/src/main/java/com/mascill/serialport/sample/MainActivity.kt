@@ -1,6 +1,5 @@
 package com.mascill.serialport.sample
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -14,22 +13,24 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import androidx.appcompat.widget.SwitchCompat
 import com.mascill.serialport.constant.BaudRates
 import com.mascill.serialport.constant.ParityOptions
 import com.mascill.serialport.helper.AssistBean
 import com.mascill.serialport.helper.SerialHelper
 import com.mascill.serialport.helper.ShellUtils
+import com.mascill.serialport.sample.databinding.ActivityMainBinding
 import java.io.*
 import java.security.InvalidParameterException
 import java.util.regex.Pattern
 
-@SuppressLint("UseSwitchCompatOrMaterialCode")
 class MainActivity : AppCompatActivity() {
 
     private val PREFS_SPINNER = "spinner_prefs"
     private val KEY_BAUD_IDX = "baud_idx"
     private val KEY_PORT_NAME = "port_name"
     private val KEY_PARITY_IDX = "parity_idx"
+    private lateinit var binding: ActivityMainBinding
 
     private lateinit var serialControl: SerialControl
     private var dispQueue: DispQueueThread? = null
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etInputData: EditText
     private lateinit var etTimeSendData: EditText
     private lateinit var etManualPortName: EditText
-    private lateinit var swMode: Switch
+    private lateinit var swMode: SwitchCompat
 
     @Volatile private var isRun: Boolean = true
     private var assistData: AssistBean = AssistBean()
@@ -143,13 +144,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        etDisplayData = findViewById(R.id.editTextRecDisp1)
-        etInputData = findViewById(R.id.editTextCOMA)
-        etTimeSendData = findViewById(R.id.editTextTimeCOMA)
-        etManualPortName = findViewById(R.id.editTextManualPort)
-        swMode = findViewById(R.id.swMode)
+        etDisplayData = binding.editTextRecDisp1
+        etInputData = binding.editTextCOMA
+        etTimeSendData = binding.editTextTimeCOMA
+        etManualPortName = binding.editTextManualPort
+        swMode = binding.swMode
 
         swMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -162,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<Button>(R.id.btnClear).setOnClickListener {
+        binding.btnClear.setOnClickListener {
             etDisplayData.setText("")
             etInputData.setText("")
         }
@@ -172,10 +174,10 @@ class MainActivity : AppCompatActivity() {
             sendPortData(serialControl, textChars)
         }
 
-        val spinnerBaudRateCOMA: Spinner = findViewById(R.id.SpinnerBaudRateCOMA)
+        val spinnerBaudRateCOMA: Spinner = binding.SpinnerBaudRateCOMA
         setupBaudRateSpinner(spinnerBaudRateCOMA)
 
-        val spinnerPortList: Spinner = findViewById(R.id.spinnerPortList)
+        val spinnerPortList: Spinner = binding.spinnerPortList
         setupPortSpinner(spinnerPortList)
 
         val toggleButtonCOMA: ToggleButton = findViewById(R.id.toggleButtonCOMA)

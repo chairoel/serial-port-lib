@@ -22,8 +22,8 @@ object BaudRates {
     val defaultIndex: Int = values.indexOf(115200).let { if (it >= 0) it else 0 }
     fun valueAt(index: Int): Int = values.getOrElse(index) { values[defaultIndex] }
 
-    fun adapter(ctx: Context): ArrayAdapter<String> =
-        ArrayAdapter(ctx, android.R.layout.simple_spinner_item, names).also {
+    fun adapter(context: Context): ArrayAdapter<String> =
+        ArrayAdapter(context, android.R.layout.simple_spinner_item, names).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 }
