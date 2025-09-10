@@ -56,7 +56,3 @@ For major changes, please open an issue first to discuss what you would like to 
 <br>
 
 ## 📄 License
-
-Kalau kamu copy ini langsung ke `README.md`, repo-mu akan terlihat profesional banget: ada badge CI, Release, dan JitPack; plus ada contoh penggunaan siap pakai 🚀
-
-Mau aku tambahin juga **contoh untuk send/receive via thread (SendThread/ReadThread)** biar user langsung ngerti use case real?
